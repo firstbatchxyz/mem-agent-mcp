@@ -55,7 +55,8 @@ generate-mcp-json:
 	@echo "Generating mcp.json with repository root path..."
 	@mkdir -p mcp_server
 	@echo '{"mcpServers": {"memory-agent-stdio": {"command": "bash", "args": ["-lc", "cd $(REPO_ROOT) && uv run python mcp_server/server.py"], "env": {"FASTMCP_LOG_LEVEL": "INFO", "MCP_TRANSPORT": "stdio"}, "timeout": 600000}}}' > mcp.json
-	@echo "Wrote mcp.json"
+	@echo "Wrote mcp.json the following contents:"
+	@cat mcp.json
 
 setup:
 	uv run python mcp_server/setup.py
