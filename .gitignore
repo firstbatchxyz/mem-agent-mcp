@@ -29,3 +29,6 @@ tmp_work/
 # .DS_Store
 .DS_Store
 **/.DS_Store
+
+# mcp.json
+mcp.json
