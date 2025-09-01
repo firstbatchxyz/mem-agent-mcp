@@ -1,0 +1,22 @@
+[project]
+name = "mcp-server"
+version = "0.1.0"
+description = "Mock FastMCP server exposing minimal tools that leverage the agent package"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "fastmcp",
+    "vllm; sys_platform != 'darwin'",
+    "agent",
+    "pygments>=2.19.2",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest",
+]
+
+[tool.uv.sources]
+agent = { workspace = true }
+
+
