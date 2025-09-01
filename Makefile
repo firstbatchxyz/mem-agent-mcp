@@ -1,8 +1,6 @@
 # Set default target
 .DEFAULT_GOAL := help
 
-include .env
-
 # Repository root (absolute)
 REPO_ROOT := $(shell git rev-parse --show-toplevel 2>/dev/null || pwd)
 
@@ -13,6 +11,9 @@ help:
 	@echo "  1. help - Show this help message"
 	@echo "  2. check-uv - Check if uv is installed and install if needed"
 	@echo "  3. install - Install dependencies using uv"
+	@echo "  4. run-agent - Run the agent"
+	@echo "  5. serve-mcp - Serve the MCP server"
+	@echo "  6. generate-mcp-json - Generate the MCP.json file"
 
 # Check if uv is installed and install if needed
 check-uv:
