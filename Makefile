@@ -15,6 +15,7 @@ help:
 	@echo "  5. serve-mcp - Serve the MCP server"
 	@echo "  6. generate-mcp-json - Generate the MCP.json file"
 	@echo "  7. setup - Choose memory directory via GUI and save to .memory_path"
+	@echo "  8. chat-cli - Run interactive CLI to chat with the agent"
 
 # Check if uv is installed and install if needed
 check-uv:
@@ -54,3 +55,6 @@ generate-mcp-json:
 
 setup:
 	uv run python mcp_server/setup.py
+
+chat-cli:
+	uv run python chat_cli.py
