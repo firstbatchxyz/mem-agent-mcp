@@ -1,0 +1,31 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+data_gen/instances/
+
+# Virtual environments
+.venv
+
+# .env
+.env
+
+# debug
+debug/
+
+# uv.lock
+uv.lock
+*.lock
+
+# memory
+memory/
+
+# tmp
+tmp_work/
+
+# .DS_Store
+.DS_Store
+**/.DS_Store
