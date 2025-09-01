@@ -14,6 +14,7 @@ help:
 	@echo "  4. run-agent - Run the agent"
 	@echo "  5. serve-mcp - Serve the MCP server"
 	@echo "  6. generate-mcp-json - Generate the MCP.json file"
+	@echo "  7. setup - Choose memory directory via GUI and save to .memory_path"
 
 # Check if uv is installed and install if needed
 check-uv:
@@ -50,3 +51,6 @@ generate-mcp-json:
 	@mkdir -p mcp_server
 	@echo '{"mcpServers": {"memory-agent-stdio": {"command": "bash", "args": ["-lc", "cd $(REPO_ROOT) && uv run python mcp_server/server.py"], "env": {"FASTMCP_LOG_LEVEL": "INFO", "MCP_TRANSPORT": "stdio"}, "timeout": 600000}}}' > mcp.json
 	@echo "Wrote mcp.json"
+
+setup:
+	uv run python mcp_server/setup.py

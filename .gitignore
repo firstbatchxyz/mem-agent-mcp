@@ -32,3 +32,6 @@ tmp_work/
 
 # mcp.json
 mcp.json
+
+# .memory_path
+.memory_path
