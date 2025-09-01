@@ -1,0 +1,23 @@
+[project]
+name = "agent"
+version = "0.1.0"
+description = "Agent module for mem-agent-mcp project"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "openai",
+    "pydantic>=2.0.0",
+    "python-dotenv",
+    "aiofiles",
+    "jinja2",
+    "black",
+    "huggingface-hub>=0.34.3",
+    "transformers>4.51.0,<4.54.0",
+    "vllm>=0.5.5; sys_platform != 'darwin'",
+    "setuptools"
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest",
+    "pytest-asyncio",
+] 
