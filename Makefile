@@ -33,6 +33,10 @@ check-uv:
 install: check-uv
 	@echo "Installing top-level workspace with uv..."
 	uv sync
+	@if [ "$$(uname -s)" = "Darwin" ]; then \
+		chmod +x mcp_server/install_lms.sh; \
+		./mcp_server/install_lms.sh; \
+	fi
 
 run-agent:
 	@if [ "$$(uname -s)" = "Darwin" ]; then \
