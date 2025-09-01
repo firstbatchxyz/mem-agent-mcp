@@ -1,0 +1,19 @@
+[project]
+name = "mem-agent-mcp"
+version = "0.1.0"
+description = "Top-level workspace aggregating agent and mcp_server"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "agent",
+    "mcp-server",
+]
+
+[tool.uv.workspace]
+members = ["agent", "mcp_server"]
+
+[tool.uv.sources]
+agent = { workspace = true }
+"mcp-server" = { workspace = true }
+
+
