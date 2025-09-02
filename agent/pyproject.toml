@@ -16,8 +16,18 @@ dependencies = [
     "setuptools"
 ]
 
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["agent", "tools", "model", "engine", "schemas", "utils", "settings"]
+
+[tool.setuptools.package-data]
+"*" = ["*.txt"]
+
 [tool.uv]
 dev-dependencies = [
     "pytest",
     "pytest-asyncio",
-] 
+]

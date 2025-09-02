@@ -2,7 +2,6 @@
 name = "mcp-server"
 version = "0.1.0"
 description = "Mock FastMCP server exposing minimal tools that leverage the agent package"
-readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [
     "fastmcp",
@@ -10,6 +9,13 @@ dependencies = [
     "agent",
     "pygments>=2.19.2",
 ]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["server", "settings", "memory_setup"]
 
 [tool.uv]
 dev-dependencies = [
