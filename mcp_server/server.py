@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     if transport == "http":
         host = os.getenv("MCP_HOST", "127.0.0.1")
-        path = os.getenv("MCP_PATH", "/mcp-memory-agent")
+        path = os.getenv("MCP_PATH", "/mcp/")
         port_str = os.getenv("MCP_PORT", "")
 
         # If no port provided (or set to 0), choose a free one to avoid conflicts

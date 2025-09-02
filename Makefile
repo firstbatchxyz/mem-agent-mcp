@@ -17,6 +17,7 @@ help:
 	@echo "  7. setup - Choose memory directory via GUI and save to .memory_path"
 	@echo "  8. chat-cli - Run interactive CLI to chat with the agent"
 
+
 # Check if uv is installed and install if needed
 check-uv:
 	@echo "Checking if uv is installed..."
@@ -49,11 +50,11 @@ run-agent:
 	fi
 
 serve-mcp:
-	uv run python -m mcp_server.server
+	@echo "Starting MCP server over STDIO"
+	FASTMCP_LOG_LEVEL=INFO MCP_TRANSPORT=stdio uv run python -m mcp_server.server
 
 generate-mcp-json:
-	@echo "Generating mcp.json with repository root path..."
-	@mkdir -p mcp_server
+	@echo "Generating mcp.json..."
 	@echo '{"mcpServers": {"memory-agent-stdio": {"command": "bash", "args": ["-lc", "cd $(REPO_ROOT) && uv run python mcp_server/server.py"], "env": {"FASTMCP_LOG_LEVEL": "INFO", "MCP_TRANSPORT": "stdio"}, "timeout": 600000}}}' > mcp.json
 	@echo "Wrote mcp.json the following contents:"
 	@cat mcp.json
