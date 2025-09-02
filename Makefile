@@ -60,7 +60,7 @@ generate-mcp-json:
 	@cat mcp.json
 
 setup:
-	uv run python mcp_server/setup.py
+	uv run python mcp_server/memory_setup.py
 
 chat-cli:
 	uv run python chat_cli.py
