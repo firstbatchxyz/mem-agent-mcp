@@ -50,6 +50,7 @@ run-agent:
 		echo "Select MLX model precision:"; \
 		echo "  1) 4-bit ($(MLX_4BIT_MEMORY_AGENT_NAME))"; \
 		echo "  2) 8-bit ($(MLX_8BIT_MEMORY_AGENT_NAME))"; \
+		echo "  3) bf16 ($(MLX_MEMORY_AGENT_NAME))"; \
 		printf "Enter choice [1-3]: "; read choice; \
 		case $$choice in \
 			1) model=$(MLX_4BIT_MEMORY_AGENT_NAME);; \
