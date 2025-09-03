@@ -36,5 +36,8 @@ mcp.json
 # .memory_path
 .memory_path
 
+# .mlx_model_name
+.mlx_model_name
+
 ## start_server.sh
 **/start_server.sh

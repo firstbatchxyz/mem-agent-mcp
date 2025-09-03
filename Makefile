@@ -4,6 +4,10 @@
 # Repository root (absolute)
 REPO_ROOT := $(shell git rev-parse --show-toplevel 2>/dev/null || pwd)
 
+# MLX Agent Names
+MLX_4BIT_MEMORY_AGENT_NAME := mem-agent-mlx-4bit
+MLX_8BIT_MEMORY_AGENT_NAME := mem-agent-mlx-8bit
+
 # Help command
 help:
 	@echo "Usage: make <target>"
@@ -42,7 +46,18 @@ install: check-uv
 run-agent:
 	@if [ "$$(uname -s)" = "Darwin" ]; then \
 		echo "Detected macOS (Darwin). Starting MLX server via lms..."; \
-		lms load mem-agent-mlx-quant; \
+		echo "Select MLX model precision:"; \
+		echo "  1) 4-bit ($(MLX_4BIT_MEMORY_AGENT_NAME))"; \
+		echo "  2) 8-bit ($(MLX_8BIT_MEMORY_AGENT_NAME))"; \
+		printf "Enter choice [1-2]: "; read choice; \
+		case $$choice in \
+			1) model=$(MLX_4BIT_MEMORY_AGENT_NAME);; \
+			2) model=$(MLX_8BIT_MEMORY_AGENT_NAME);; \
+			*) echo "Invalid choice. Defaulting to 4-bit."; model=$(MLX_4BIT_MEMORY_AGENT_NAME);; \
+		esac; \
+		printf "%s\n" "$$model" > $(REPO_ROOT)/.mlx_model_name; \
+		echo "Saved model to $(REPO_ROOT)/.mlx_model_name: $$(cat $(REPO_ROOT)/.mlx_model_name)"; \
+		lms load $$model; \
 		lms server start --port 8000; \
 	else \
 		echo "Non-macOS detected. Starting vLLM server..."; \
