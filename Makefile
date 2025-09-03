@@ -7,6 +7,7 @@ REPO_ROOT := $(shell git rev-parse --show-toplevel 2>/dev/null || pwd)
 # MLX Agent Names
 MLX_4BIT_MEMORY_AGENT_NAME := mem-agent-mlx-4bit
 MLX_8BIT_MEMORY_AGENT_NAME := mem-agent-mlx-8bit
+MLX_MEMORY_AGENT_NAME := driaforall/mem-agent-mlx-bf16 
 
 # Help command
 help:
@@ -49,10 +50,11 @@ run-agent:
 		echo "Select MLX model precision:"; \
 		echo "  1) 4-bit ($(MLX_4BIT_MEMORY_AGENT_NAME))"; \
 		echo "  2) 8-bit ($(MLX_8BIT_MEMORY_AGENT_NAME))"; \
-		printf "Enter choice [1-2]: "; read choice; \
+		printf "Enter choice [1-3]: "; read choice; \
 		case $$choice in \
 			1) model=$(MLX_4BIT_MEMORY_AGENT_NAME);; \
 			2) model=$(MLX_8BIT_MEMORY_AGENT_NAME);; \
+			3) model=$(MLX_MEMORY_AGENT_NAME);; \
 			*) echo "Invalid choice. Defaulting to 4-bit."; model=$(MLX_4BIT_MEMORY_AGENT_NAME);; \
 		esac; \
 		printf "%s\n" "$$model" > $(REPO_ROOT)/.mlx_model_name; \
