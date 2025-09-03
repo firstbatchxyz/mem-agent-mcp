@@ -35,8 +35,8 @@ install: check-uv
 	@echo "Installing top-level workspace with uv..."
 	uv sync
 	@if [ "$$(uname -s)" = "Darwin" ]; then \
-		chmod +x mcp_server/install_lms.sh; \
-		./mcp_server/install_lms.sh; \
+		chmod +x mcp_server/scripts/install_lms.sh; \
+		./mcp_server/scripts/install_lms.sh; \
 	fi
 
 run-agent:
@@ -60,7 +60,7 @@ generate-mcp-json:
 	@cat mcp.json
 
 setup:
-	uv run python mcp_server/memory_setup.py
+	uv run python mcp_server/scripts/memory_setup.py && uv run python mcp_server/scripts/setup_scripts_and_json.py && chmod +x mcp_server/scripts/start_server.sh
 
 chat-cli:
 	uv run python chat_cli.py

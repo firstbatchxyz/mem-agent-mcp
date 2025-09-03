@@ -3,8 +3,8 @@ import sys
 
 
 def get_repo_root() -> str:
-    """Return absolute path to the repository root (directory containing this file)."""
-    return os.path.abspath(os.path.dirname(__file__))
+    """Return absolute path to the repository root (two levels up from this file)."""
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 
 def get_default_memory_dir(repo_root: str) -> str:

@@ -35,3 +35,6 @@ mcp.json
 
 # .memory_path
 .memory_path
+
+## start_server.sh
+**/start_server.sh
