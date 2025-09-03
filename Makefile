@@ -42,8 +42,13 @@ install: check-uv
 	@echo "Installing top-level workspace with uv..."
 	uv sync
 	@if [ "$$(uname -s)" = "Darwin" ]; then \
-		chmod +x mcp_server/scripts/install_lms.sh; \
-		./mcp_server/scripts/install_lms.sh; \
+		if ! command -v lms > /dev/null; then \
+			echo "lms not found. Installing lms..."; \
+			chmod +x mcp_server/scripts/install_lms.sh; \
+			./mcp_server/scripts/install_lms.sh; \
+		else \
+			echo "lms is already installed"; \
+		fi; \
 	fi
 
 setup:
