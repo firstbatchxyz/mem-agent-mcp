@@ -98,14 +98,6 @@ def _read_mlx_model_name(default_model: str) -> str:
         pass
     return default_model
 
-agent = Agent(
-    model=(
-        MEMORY_AGENT_NAME if not IS_DARWIN else _read_mlx_model_name(MLX_4BIT_MEMORY_AGENT_NAME)
-    ),
-    use_vllm=True,
-    predetermined_memory_path=False,
-    memory_path=_read_memory_path(),
-)
 
 @mcp.tool
 async def use_memory_agent(question: str, ctx: Context) -> str:
@@ -128,6 +120,14 @@ async def use_memory_agent(question: str, ctx: Context) -> str:
         The response from the agent.
     """
     try:
+        agent = Agent(
+            model=(
+                MEMORY_AGENT_NAME if not IS_DARWIN else _read_mlx_model_name(MLX_4BIT_MEMORY_AGENT_NAME)
+            ),
+            use_vllm=True,
+            predetermined_memory_path=False,
+            memory_path=_read_memory_path(),
+        )
         loop = asyncio.get_running_loop()
         fut = loop.run_in_executor(None, agent.chat, question)
 
