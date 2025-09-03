@@ -11,6 +11,8 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
+FILTERS_PATH = os.path.join(REPO_ROOT, ".filters")
+
 from agent import Agent
 try:
     from mcp_server.settings import MEMORY_AGENT_NAME
@@ -98,6 +100,15 @@ def _read_mlx_model_name(default_model: str) -> str:
         pass
     return default_model
 
+def _read_filters() -> str:
+    """
+    Read the filters from .filters at repo root.
+    """
+    try:
+        with open(FILTERS_PATH, "r") as f:
+            return f.read().strip()
+    except Exception:
+        return ""
 
 @mcp.tool
 async def use_memory_agent(question: str, ctx: Context) -> str:
@@ -128,6 +139,12 @@ async def use_memory_agent(question: str, ctx: Context) -> str:
             predetermined_memory_path=False,
             memory_path=_read_memory_path(),
         )
+
+        filters = _read_filters()
+
+        if len(filters) > 0:
+            question = question + "\n\n" + "<filter>" + filters + "</filter>"
+
         loop = asyncio.get_running_loop()
         fut = loop.run_in_executor(None, agent.chat, question)
 

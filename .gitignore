@@ -36,6 +36,9 @@ mcp.json
 # .memory_path
 .memory_path
 
+# .filters
+.filters
+
 # .mlx_model_name
 .mlx_model_name
 

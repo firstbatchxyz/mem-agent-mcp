@@ -17,12 +17,13 @@ help:
 	@echo "  1. help - Show this help message"
 	@echo "  2. check-uv - Check if uv is installed and install if needed"
 	@echo "  3. install - Install dependencies using uv"
-	@echo "  4. run-agent - Run the agent"
-	@echo "  5. serve-mcp - Serve the MCP server"
-	@echo "  6. generate-mcp-json - Generate the MCP.json file"
-	@echo "  7. setup - Choose memory directory via GUI and save to .memory_path"
-	@echo "  8. chat-cli - Run interactive CLI to chat with the agent"
-
+	@echo "  4. setup - Choose memory directory via GUI and save to .memory_path"
+	@echo "  5. add-filters - Add filters to .filters"
+	@echo "  6. reset-filters - Reset filters in .filters"
+	@echo "  7. run-agent - Run the agent"
+	@echo "  8. generate-mcp-json - Generate the MCP.json file"
+	@echo "  9. serve-mcp - Serve the MCP server"
+	@echo "  10. chat-cli - Run interactive CLI to chat with the agent"
 
 # Check if uv is installed and install if needed
 check-uv:
@@ -44,6 +45,15 @@ install: check-uv
 		chmod +x mcp_server/scripts/install_lms.sh; \
 		./mcp_server/scripts/install_lms.sh; \
 	fi
+
+setup:
+	uv run python mcp_server/scripts/memory_setup.py && uv run python mcp_server/scripts/setup_scripts_and_json.py && chmod +x mcp_server/scripts/start_server.sh
+
+add-filters:
+	uv run python mcp_server/scripts/filters.py --add
+
+reset-filters:
+	uv run python mcp_server/scripts/filters.py --reset
 
 run-agent:
 	@if [ "$$(uname -s)" = "Darwin" ]; then \
@@ -69,18 +79,15 @@ run-agent:
 		uv run vllm serve driaforall/mem-agent; \
 	fi
 
-serve-mcp:
-	@echo "Starting MCP server over STDIO"
-	FASTMCP_LOG_LEVEL=INFO MCP_TRANSPORT=stdio uv run python -m mcp_server.server
-
 generate-mcp-json:
 	@echo "Generating mcp.json..."
 	@echo '{"mcpServers": {"memory-agent-stdio": {"command": "bash", "args": ["-lc", "cd $(REPO_ROOT) && uv run python mcp_server/server.py"], "env": {"FASTMCP_LOG_LEVEL": "INFO", "MCP_TRANSPORT": "stdio"}, "timeout": 600000}}}' > mcp.json
 	@echo "Wrote mcp.json the following contents:"
 	@cat mcp.json
 
-setup:
-	uv run python mcp_server/scripts/memory_setup.py && uv run python mcp_server/scripts/setup_scripts_and_json.py && chmod +x mcp_server/scripts/start_server.sh
+serve-mcp:
+	@echo "Starting MCP server over STDIO"
+	FASTMCP_LOG_LEVEL=INFO MCP_TRANSPORT=stdio uv run python -m mcp_server.server
 
 chat-cli:
 	uv run python chat_cli.py
