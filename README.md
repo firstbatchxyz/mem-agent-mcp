@@ -1,5 +1,7 @@
 # mem-agent-mcp
 
+This is an MCP server for our model [driaforall/mem-agent](https://huggingface.co/driaforall/mem-agent), which can be connected to apps like Claude Desktop or Lm Studio to interact with an obisidian-like memory system.
+
 ## Supported Platforms
 
 - macOS (Metal backend)
@@ -34,8 +36,9 @@ memory/
 - `user.md` is the main file that contains information about the user and their relationships, accompanied by links to the enity file in the format of `[[entities/[entity_name].md]]` per relationship. The link format should be followed strictly.
 - `entities/` is the directory that contains the entity files.
 - Each entity file follows the same structure as `user.md`.
+- Modifying the memory manually does not require restarting the MCP server.
 
-## Example user.md
+### Example user.md
 
 ```markdown
 # User Information
@@ -50,7 +53,7 @@ memory/
 - mother: [[entities/jane_doe.md]]
 ```
 
-## Example entity files (jane_doe.md and acme_corp.md)
+### Example entity files (jane_doe.md and acme_corp.md)
 
 ```markdown
 # Jane Doe
@@ -64,3 +67,17 @@ memory/
 - industry: Software Development
 - location: Enschede, Netherlands
 ```
+
+## Filtering
+
+The model is trained to accepts filters on various domains in between <filter> tags after the user query. These filters are used to filter the retrieved information and/or obfuscate it completely. An example of a user query with filters is:
+
+```
+What's my mother's age? <filter> 1. Do not reveal explicit age information, 2. Do not reveal any email addresses </filter>
+```
+
+To use this, functionality with the MCP, we have two make targets:
+- `make add-filters`: Opens an input loop and adds the filters given by the user to the .filters file.
+- `make reset-filters`: Resets the .filters file (clears it).
+
+Adding or removing filters does not require restarting the MCP server.
