@@ -85,8 +85,6 @@ Adding or removing filters does not require restarting the MCP server.
 
 ## Memory Connectors
 
-Transform your conversation history from various sources into an intelligent, searchable memory system that Claude can access and reason about.
-
 ### Available Connectors
 
 | Connector | Description | Supported Formats | Type |
