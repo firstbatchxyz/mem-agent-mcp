@@ -76,7 +76,7 @@ The model is trained to accepts filters on various domains in between <filter> t
 What's my mother's age? <filter> 1. Do not reveal explicit age information, 2. Do not reveal any email addresses </filter>
 ```
 
-To use this, functionality with the MCP, we have two make targets:
+To use this, functionality with the MCP, you have two make targets:
 - `make add-filters`: Opens an input loop and adds the filters given by the user to the .filters file.
 - `make reset-filters`: Resets the .filters file (clears it).
 
