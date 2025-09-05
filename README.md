@@ -2,8 +2,8 @@
 
 ## Supported Platforms
 
-- macOS
-- Linux (with GPU)
+- macOS (Metal backend)
+- Linux (with GPU, vLLM backend)
 
 ## Running Instructions
 
