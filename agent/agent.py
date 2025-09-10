@@ -1,3 +1,4 @@
+import sys
 from agent.engine import execute_sandboxed_code
 from agent.model import get_model_response, create_openai_client, create_vllm_client
 from agent.utils import (

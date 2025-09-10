@@ -122,13 +122,30 @@ List Available Connectors:
 ```bash
 make connect-memory
 # or
-python memory_connect.py --list
-```
+python memory_connectors/memory_connect.py --list
 
 #### ChatGPT History Import
 ```bash
 # Basic usage
 make connect-memory CONNECTOR=chatgpt SOURCE=/path/to/chatgpt-export.zip
+
+# AI-powered categorization with TF-IDF (fast)
+python memory_connectors/memory_connect.py chatgpt /path/to/export.zip --method ai --embedding-model tfidf
+
+# AI-powered categorization with LM Studio (high-quality semantic)
+python memory_connectors/memory_connect.py chatgpt /path/to/export.zip --method ai --embedding-model lmstudio
+
+# Keyword-based with custom categories
+python memory_connectors/memory_connect.py chatgpt /path/to/export.zip --method keyword --edit-keywords
+
+# Process limited conversations
+python memory_connectors/memory_connect.py chatgpt /path/to/export.zip --max-items 100
+```
+
+**Categorization Methods:**
+- **Keyword-based**: Fast, customizable categories using predefined keywords
+- **AI-powered (TF-IDF)**: Statistical clustering, discovers conversation patterns
+- **AI-powered (LM Studio)**: Semantic embeddings via neural networks (requires LM Studio)
 
 # Custom output location
 make connect-memory CONNECTOR=chatgpt SOURCE=/path/to/export.zip OUTPUT=./memory/custom
@@ -139,7 +156,6 @@ make connect-memory CONNECTOR=chatgpt SOURCE=/path/to/export.zip MAX_ITEMS=100
 # Direct CLI usage
 python memory_connect.py chatgpt /path/to/export.zip --output ./memory --max-items 100
 ```
-
 #### Notion Workspace Import
 ```bash
 # Basic usage
@@ -147,10 +163,8 @@ make connect-memory CONNECTOR=notion SOURCE=/path/to/notion-export.zip
 
 # Custom output location
 make connect-memory CONNECTOR=notion SOURCE=/path/to/export.zip OUTPUT=./memory/custom
-
-# Direct CLI usage
-python memory_connect.py notion /path/to/export.zip --output ./memory
-```
+  
+python memory_connectors/memory_connect.py notion /path/to/export.zip --output ./memory
 
 #### Getting ChatGPT Export
 1. Go to [ChatGPT Settings](https://chatgpt.com/settings/data-controls)
@@ -168,8 +182,7 @@ make connect-memory CONNECTOR=nuclino SOURCE=/path/to/nuclino-export.zip
 make connect-memory CONNECTOR=nuclino SOURCE=/path/to/export.zip OUTPUT=./memory/custom
 
 # Direct CLI usage
-python memory_connect.py nuclino /path/to/export.zip --output ./memory
-```
+python memory_connectors/memory_connect.py nuclino /path/to/export.zip --output ./memory
 
 #### Getting Notion Export
 1. Go to your Notion workspace settings
@@ -200,11 +213,10 @@ make connect-memory CONNECTOR=github SOURCE="owner/repo1,owner/repo2" TOKEN=your
 make connect-memory CONNECTOR=github SOURCE="facebook/react" OUTPUT=./memory/custom MAX_ITEMS=50 TOKEN=your_token
 
 # Direct CLI usage with interactive token input
-python memory_connect.py github "microsoft/vscode" --max-items 100
+python memory_connectors/memory_connect.py github "microsoft/vscode" --max-items 100
 
 # Include specific content types
-python memory_connect.py github "owner/repo" --include-issues --include-prs --include-wiki --token your_token
-```
+python memory_connectors/memory_connect.py github "owner/repo" --include-issues --include-prs --include-wiki --token your_token
 
 #### Getting GitHub Personal Access Token
 1. Go to [GitHub Settings → Tokens](https://github.com/settings/tokens)
@@ -229,8 +241,7 @@ make connect-memory CONNECTOR=google-docs SOURCE="https://drive.google.com/drive
 make connect-memory CONNECTOR=google-docs SOURCE="folder_id" OUTPUT=./memory/custom MAX_ITEMS=20 TOKEN=your_token
 
 # Direct CLI usage with interactive token input
-python memory_connect.py google-docs "1ABC123DEF456_folder_id" --max-items 15
-```
+python memory_connectors/memory_connect.py google-docs "1ABC123DEF456_folder_id" --max-items 15
 
 #### Getting Google Drive Access Token
 
@@ -283,4 +294,135 @@ memory/mcp-server/
         └── conversations/      # Individual conversation files
             ├── conv_0-project-discussion.md
             └── conv_1-technical-planning.md
+  
+### Testing Your Memory
+
+After importing, test the memory system:
+
+1. Start the mem-agent: `make run-agent`
+2. Start Claude Desktop with the MCP server
+3. Ask questions like:
+   - "What can you tell me about our product roadmap?"
+   - "What were my thoughts on AI agent frameworks?"
+   - "Summarize my recent technical discussions"
+
+The agent should access your real conversation history instead of providing generic responses.
+
+## Architecture
+
+### Mem-Agent
+- **Dria's Memory Agent**: Specialized LLM fine-tuned for memory management and retrieval
+- **Local Deployment**: Runs via LM Studio (MLX) or vLLM for privacy and speed
+- **Multiple Variants**: 4-bit, 8-bit, and bf16 quantizations available
+- **Tool Integration**: Purpose-built for file operations and memory search
+
+### Memory Structure
+- **Obsidian-style**: Markdown files with wikilink navigation
+- **Topic Organization**: Automatic categorization by subject matter
+- **Entity Relationships**: Cross-referenced connections between conversations
+- **Search Optimization**: Structured for efficient agent discovery
+
+### MCP Integration
+- **FastMCP Framework**: High-performance Model Context Protocol server
+- **Claude Desktop**: Claude's desktop app
+- **Claude Code**: Anthropic's agentic coding tool that lives in your terminal
+
+#### Claude Code Setup
+
+**Prerequisites**: Start your memory server first:
+```bash
+make run-agent  # Required: vLLM or MLX model server must be running
 ```
+
+**Add MCP Server:**
+```bash
+claude mcp add mem-agent \
+  --env MEMORY_DIR="/path/to/your/memory/directory" \
+  -- python "/path/to/mcp_server/server.py"
+```
+
+**Verify & Use:**
+```bash
+claude mcp list  # Should show mem-agent as connected
+```
+
+Now Claude Code can access your memory system for contextual assistance during development.
+- **Tool Execution**: Sandboxed code execution for memory operations
+- **Debug Logging**: Comprehensive logging for troubleshooting
+
+## Troubleshooting
+
+### Common Issues
+
+**Agent returns generic responses instead of using memory:**
+- Check that memory files exist in the configured path
+- Verify user.md contains proper topic navigation
+- Enable debug logging to see agent's reasoning process
+- Test with direct questions about known conversation topics
+
+**MCP connection issues:**
+- Check Claude Desktop configuration in `~/.config/claude/claude_desktop.json`
+- Verify PATH configuration includes LM Studio binary
+- Increase timeout settings for large memory imports
+- Review logs in `~/Library/Logs/Claude/mcp-server-memory-agent-stdio.log`
+
+**Memory import failures:**
+- Ensure export format is supported (.zip or .json for ChatGPT)
+- Check file permissions and disk space
+- Try with --max-items to limit processing scope
+- Verify export contains expected data structure
+
+### Debug Mode
+
+Enable detailed logging by setting environment variables:
+```bash
+FASTMCP_LOG_LEVEL=DEBUG make serve-mcp
+```
+
+Or check the agent's internal reasoning in the log files during operation.
+
+## Development
+
+### Adding New Connectors
+
+1. Create connector class inheriting from `BaseMemoryConnector`
+2. Implement required methods: `extract_data()`, `organize_data()`, `generate_memory_files()`
+3. Add to connector registry in `memory_connect.py`
+4. Update README with usage examples
+
+Example connector skeleton:
+```python
+from memory_connectors.base import BaseMemoryConnector
+
+class MyConnector(BaseMemoryConnector):
+    @property
+    def connector_name(self) -> str:
+        return "My Service"
+    
+    @property 
+    def supported_formats(self) -> list:
+        return ['.zip', '.json']
+    
+    def extract_data(self, source_path: str) -> Dict[str, Any]:
+        # Parse source data
+        pass
+    
+    def organize_data(self, extracted_data: Dict[str, Any]) -> Dict[str, Any]:
+        # Organize into topics  
+        pass
+    
+    def generate_memory_files(self, organized_data: Dict[str, Any]) -> None:
+        # Generate markdown files
+        pass
+```
+
+### Contributing
+
+This system is designed as local add-ons that don't affect the main mem-agent-mcp repository:
+
+- Memory connectors are local extensions
+- Legacy compatibility is maintained
+- All changes preserve existing functionality
+- Debug improvements enhance troubleshooting
+
+Pull requests welcome for new connectors and improvements!
