@@ -123,7 +123,6 @@ List Available Connectors:
 make connect-memory
 # or
 python memory_connectors/memory_connect.py --list
-```
 
 #### ChatGPT History Import
 ```bash
@@ -148,6 +147,15 @@ python memory_connectors/memory_connect.py chatgpt /path/to/export.zip --max-ite
 - **AI-powered (TF-IDF)**: Statistical clustering, discovers conversation patterns
 - **AI-powered (LM Studio)**: Semantic embeddings via neural networks (requires LM Studio)
 
+# Custom output location
+make connect-memory CONNECTOR=chatgpt SOURCE=/path/to/export.zip OUTPUT=./memory/custom
+
+# Process only first 100 conversations
+make connect-memory CONNECTOR=chatgpt SOURCE=/path/to/export.zip MAX_ITEMS=100
+
+# Direct CLI usage
+python memory_connect.py chatgpt /path/to/export.zip --output ./memory --max-items 100
+```
 #### Notion Workspace Import
 ```bash
 # Basic usage
@@ -155,10 +163,8 @@ make connect-memory CONNECTOR=notion SOURCE=/path/to/notion-export.zip
 
 # Custom output location
 make connect-memory CONNECTOR=notion SOURCE=/path/to/export.zip OUTPUT=./memory/custom
-
-# Direct CLI usage
+  
 python memory_connectors/memory_connect.py notion /path/to/export.zip --output ./memory
-```
 
 #### Getting ChatGPT Export
 1. Go to [ChatGPT Settings](https://chatgpt.com/settings/data-controls)
@@ -177,7 +183,6 @@ make connect-memory CONNECTOR=nuclino SOURCE=/path/to/export.zip OUTPUT=./memory
 
 # Direct CLI usage
 python memory_connectors/memory_connect.py nuclino /path/to/export.zip --output ./memory
-```
 
 #### Getting Notion Export
 1. Go to your Notion workspace settings
@@ -212,7 +217,6 @@ python memory_connectors/memory_connect.py github "microsoft/vscode" --max-items
 
 # Include specific content types
 python memory_connectors/memory_connect.py github "owner/repo" --include-issues --include-prs --include-wiki --token your_token
-```
 
 #### Getting GitHub Personal Access Token
 1. Go to [GitHub Settings → Tokens](https://github.com/settings/tokens)
@@ -238,7 +242,6 @@ make connect-memory CONNECTOR=google-docs SOURCE="folder_id" OUTPUT=./memory/cus
 
 # Direct CLI usage with interactive token input
 python memory_connectors/memory_connect.py google-docs "1ABC123DEF456_folder_id" --max-items 15
-```
 
 #### Getting Google Drive Access Token
 
@@ -291,7 +294,7 @@ memory/mcp-server/
         └── conversations/      # Individual conversation files
             ├── conv_0-project-discussion.md
             └── conv_1-technical-planning.md
-```
+  
 ### Testing Your Memory
 
 After importing, test the memory system:
