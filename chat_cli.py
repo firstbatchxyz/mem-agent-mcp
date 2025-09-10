@@ -1,7 +1,17 @@
 import os
 import sys
+import threading
+import time
 
 from agent import Agent
+from agent.schemas import Role
+from agent.utils import extract_reply
+
+from rich.console import Console, Group
+from rich.live import Live
+from rich.panel import Panel
+from rich.syntax import Syntax
+from rich.text import Text
 
 try:
     from mcp_server.settings import (
@@ -75,12 +85,62 @@ def main() -> None:
         memory_path=memory_path,
     )
 
-    print("Interactive Memory Agent CLI")
-    print("Type your message and press Enter. Type quit() to exit.\n")
+    console = Console()
+    console.print("[bold]Interactive Memory Agent CLI[/bold]")
+    console.print("Type your message and press Enter. Type [bold]quit()[/bold] to exit.\n")
+
+    def render_messages(messages):
+        renderables = []
+        for msg in messages:
+            role = msg.role
+            content = msg.content or ""
+
+            # Detect environment/tool results encoded in <result> tags
+            if role == Role.USER and content.strip().startswith("<result>"):
+                # Extract inner content between <result> and </result>
+                try:
+                    inner = content.split("<result>", 1)[1].split("</result>", 1)[0].strip()
+                except Exception:
+                    inner = content
+                syntax = Syntax(
+                    inner,
+                    "python",
+                    theme="monokai",
+                    line_numbers=False,
+                    word_wrap=True,
+                )
+                renderables.append(
+                    Panel(syntax, title="[magenta]environment[/magenta]", border_style="magenta")
+                )
+                continue
+
+            if role == Role.SYSTEM:
+                # Do not render system prompt/messages
+                continue
+            elif role == Role.USER:
+                renderables.append(
+                    Panel(Text(content, style="cyan"), title="[cyan]you[/cyan]", border_style="cyan")
+                )
+            elif role == Role.ASSISTANT:
+                reply = (extract_reply(content) or content).strip()
+                renderables.append(
+                    Panel(Text(reply, style="green"), title="[green]agent[/green]", border_style="green")
+                )
+            else:
+                renderables.append(Panel(Text(content), title=str(role)))
+
+        return renderables
+
+    def _clear_last_line():
+        try:
+            sys.stdout.write("\033[1A\033[2K")
+            sys.stdout.flush()
+        except Exception:
+            pass
 
     while True:
         try:
-            user_input = input("you: ").strip()
+            user_input = Console().input("[cyan]you[/cyan]: ").strip()
         except (EOFError, KeyboardInterrupt):
             print()  # newline
             break
@@ -90,12 +150,46 @@ def main() -> None:
         if not user_input:
             continue
 
-        try:
-            result = agent.chat(user_input)
-            reply = (result.reply or "").strip()
-            print(f"agent: \n{reply}\n")
-        except Exception as exc:
-            print(f"agent_error: {type(exc).__name__}: {exc}\n")
+        # Remove the raw input line so only Rich conversation panels remain
+        _clear_last_line()
+
+        # Run agent.chat in a background thread and live-render only THIS TURN's messages
+        result_container = {"result": None, "error": None}
+        start_index = len(agent.messages)
+
+        def _run_agent():
+            try:
+                result_container["result"] = agent.chat(user_input)
+            except Exception as e:
+                result_container["error"] = e
+
+        t = threading.Thread(target=_run_agent, daemon=True)
+        t.start()
+
+        with Live(Panel(Text("Waiting for agent...", style="yellow"), border_style="yellow"),
+                  console=console, refresh_per_second=8) as live:
+            while t.is_alive():
+                messages_snapshot = list(agent.messages)[start_index:]
+                panels = render_messages(messages_snapshot)
+                body = panels[-1] if len(panels) == 1 else Group(*panels)
+                live_renderable = Panel(
+                    body,
+                    title="Conversation",
+                    border_style="white",
+                )
+                live.update(live_renderable, refresh=True)
+                time.sleep(0.12)
+
+            # One final update after the thread finishes
+            messages_snapshot = list(agent.messages)[start_index:]
+            panels = render_messages(messages_snapshot)
+            body = panels[-1] if len(panels) == 1 else Group(*panels)
+            live.update(Panel(body, title="Conversation", border_style="white"), refresh=True)
+
+        t.join()
+
+        if result_container["error"] is not None:
+            console.print(f"[red]agent_error[/red]: {type(result_container['error']).__name__}: {result_container['error']}\n")
 
 
 if __name__ == "__main__":
