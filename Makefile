@@ -24,6 +24,9 @@ help:
 	@echo "  8. generate-mcp-json - Generate the MCP.json file"
 	@echo "  9. serve-mcp - Serve the MCP server"
 	@echo "  10. chat-cli - Run interactive CLI to chat with the agent"
+	@echo "  11. memory-wizard - Interactive wizard for connecting memory sources"  
+	@echo "  12. connect-memory - Connect memory sources using new connector system"
+	@echo "  13. convert-chatgpt - Convert ChatGPT export (legacy, use connect-memory instead)"
 
 # Check if uv is installed and install if needed
 check-uv:
@@ -96,3 +99,54 @@ serve-mcp:
 
 chat-cli:
 	uv run python chat_cli.py
+
+# Interactive Memory Wizard
+memory-wizard:
+	@echo "🧙‍♂️ Starting Memory Connector Wizard..."
+	uv run python memory_connectors/memory_wizard.py
+
+# Memory Connectors (unified system)
+connect-memory:
+	@echo "Memory Connectors - Convert various sources to mem-agent format"
+	@echo "Usage: make connect-memory CONNECTOR=<type> SOURCE=<path> [OUTPUT=<path>] [MAX_ITEMS=<num>] [TOKEN=<token>]"
+	@echo ""
+	@echo "Available connectors:"
+	@uv run python memory_connectors/memory_connect.py --list
+	@echo ""
+	@if [ -z "$(CONNECTOR)" ] || [ -z "$(SOURCE)" ]; then \
+		echo "Examples:"; \
+		echo "  Export-based: make connect-memory CONNECTOR=chatgpt SOURCE=/path/to/export.zip"; \
+		echo "  Live GitHub:  make connect-memory CONNECTOR=github SOURCE='owner/repo' TOKEN=github_token"; \
+		echo "  Live Google:  make connect-memory CONNECTOR=google-docs SOURCE='folder_id' TOKEN=access_token"; \
+		exit 1; \
+	fi
+	@if [ "$(CONNECTOR)" != "github" ] && [ "$(CONNECTOR)" != "google-docs" ] && [ ! -e "$(SOURCE)" ]; then \
+		echo "Error: Source path does not exist: $(SOURCE)"; \
+		exit 1; \
+	fi
+	@cmd="uv run python memory_connectors/memory_connect.py $(CONNECTOR) $(SOURCE)"; \
+	if [ -n "$(OUTPUT)" ]; then cmd="$$cmd --output $(OUTPUT)"; fi; \
+	if [ -n "$(MAX_ITEMS)" ]; then cmd="$$cmd --max-items $(MAX_ITEMS)"; fi; \
+	if [ -n "$(TOKEN)" ]; then cmd="$$cmd --token $(TOKEN)"; fi; \
+	echo "Running: $$cmd"; \
+	$$cmd
+
+# Legacy ChatGPT converter (kept for backwards compatibility)
+convert-chatgpt:
+	@echo "⚠️  Legacy ChatGPT converter (use 'make connect-memory CONNECTOR=chatgpt' instead)"
+	@echo "Usage: make convert-chatgpt EXPORT_PATH=/path/to/chatgpt-export [MAX_CONVERSATIONS=100]"
+	@echo ""
+	@if [ -z "$(EXPORT_PATH)" ]; then \
+		echo "Error: EXPORT_PATH is required"; \
+		echo "Example: make convert-chatgpt EXPORT_PATH=/Users/username/Downloads/chatgpt-export"; \
+		exit 1; \
+	fi
+	@if [ ! -e "$(EXPORT_PATH)" ]; then \
+		echo "Error: Export path does not exist: $(EXPORT_PATH)"; \
+		exit 1; \
+	fi
+	@cmd="uv run python memory_connectors/memory_connect.py chatgpt $(EXPORT_PATH)"; \
+	if [ -n "$(MAX_CONVERSATIONS)" ]; then cmd="$$cmd --max-items $(MAX_CONVERSATIONS)"; fi; \
+	echo "🔄 Redirecting to new connector system..."; \
+	echo "Running: $$cmd"; \
+	$$cmd
