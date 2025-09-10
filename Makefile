@@ -103,7 +103,7 @@ chat-cli:
 # Interactive Memory Wizard
 memory-wizard:
 	@echo "🧙‍♂️ Starting Memory Connector Wizard..."
-	uv run python memory_connectors/memory_wizard.py
+	uv run python -m memory_connectors.memory_wizard
 
 # Memory Connectors (unified system)
 connect-memory:
@@ -111,7 +111,7 @@ connect-memory:
 	@echo "Usage: make connect-memory CONNECTOR=<type> SOURCE=<path> [OUTPUT=<path>] [MAX_ITEMS=<num>] [TOKEN=<token>]"
 	@echo ""
 	@echo "Available connectors:"
-	@uv run python memory_connectors/memory_connect.py --list
+	@uv run python -m memory_connectors.memory_connect --list
 	@echo ""
 	@if [ -z "$(CONNECTOR)" ] || [ -z "$(SOURCE)" ]; then \
 		echo "Examples:"; \
@@ -124,7 +124,7 @@ connect-memory:
 		echo "Error: Source path does not exist: $(SOURCE)"; \
 		exit 1; \
 	fi
-	@cmd="uv run python memory_connectors/memory_connect.py $(CONNECTOR) $(SOURCE)"; \
+	@cmd="uv run python -m memory_connectors.memory_connect $(CONNECTOR) $(SOURCE)"; \
 	if [ -n "$(OUTPUT)" ]; then cmd="$$cmd --output $(OUTPUT)"; fi; \
 	if [ -n "$(MAX_ITEMS)" ]; then cmd="$$cmd --max-items $(MAX_ITEMS)"; fi; \
 	if [ -n "$(TOKEN)" ]; then cmd="$$cmd --token $(TOKEN)"; fi; \
@@ -145,7 +145,7 @@ convert-chatgpt:
 		echo "Error: Export path does not exist: $(EXPORT_PATH)"; \
 		exit 1; \
 	fi
-	@cmd="uv run python memory_connectors/memory_connect.py chatgpt $(EXPORT_PATH)"; \
+	@cmd="uv run python -m memory_connectors.memory_connect chatgpt $(EXPORT_PATH)"; \
 	if [ -n "$(MAX_CONVERSATIONS)" ]; then cmd="$$cmd --max-items $(MAX_CONVERSATIONS)"; fi; \
 	echo "🔄 Redirecting to new connector system..."; \
 	echo "Running: $$cmd"; \

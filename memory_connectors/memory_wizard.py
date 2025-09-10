@@ -18,9 +18,8 @@ from memory_connectors import BaseMemoryConnector, ChatGPTHistoryConnector, Noti
 from memory_connectors.github_live import GitHubLiveConnector
 from memory_connectors.google_docs_live import GoogleDocsLiveConnector
 
-# Import memory path helpers
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'mcp_server', 'scripts'))
-from memory_setup import get_repo_root, get_default_memory_dir
+# Import memory path helpers from top-level package
+from mcp_server.scripts.memory_setup import get_repo_root, get_default_memory_dir
 
 # Registry of available connectors
 CONNECTORS: Dict[str, type] = {
@@ -410,9 +409,9 @@ class MemoryWizard:
     def _run_connector(self) -> bool:
         """Run the selected connector with configured parameters."""
         try:
-            # Build command
+            # Build command (run as module for proper package imports)
             cmd = [
-                sys.executable, "memory_connect.py",
+                sys.executable, "-m", "memory_connectors.memory_connect",
                 self.selected_connector,
                 self.connector_params['source_path'],
                 "--output", self.output_dir

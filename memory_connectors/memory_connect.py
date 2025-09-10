@@ -132,7 +132,7 @@ def edit_chatgpt_keywords():
         import ast
         
         # Read the current keywords from the connector source
-        connector_file = Path(__file__).parent / 'memory_connectors' / 'chatgpt_history' / 'connector.py'
+        connector_file = Path(__file__).parent / 'chatgpt_history' / 'connector.py'
         
         with open(connector_file, 'r') as f:
             source = f.read()
@@ -385,25 +385,47 @@ Examples:
         help='API token for live connectors (GitHub personal access token)'
     )
     
+    # Include/exclude flags for GitHub
     parser.add_argument(
         '--include-issues',
+        dest='include_issues',
         action='store_true',
         default=True,
         help='Include issues (default: True, GitHub only)'
     )
+    parser.add_argument(
+        '--no-include-issues',
+        dest='include_issues',
+        action='store_false',
+        help='Exclude issues (GitHub only)'
+    )
     
     parser.add_argument(
         '--include-prs',
+        dest='include_prs',
         action='store_true', 
         default=True,
         help='Include pull requests (default: True, GitHub only)'
     )
+    parser.add_argument(
+        '--no-include-prs',
+        dest='include_prs',
+        action='store_false',
+        help='Exclude pull requests (GitHub only)'
+    )
     
     parser.add_argument(
         '--include-wiki',
+        dest='include_wiki',
         action='store_true',
         default=True,
         help='Include wiki pages (default: True, GitHub only)'
+    )
+    parser.add_argument(
+        '--no-include-wiki',
+        dest='include_wiki',
+        action='store_false',
+        help='Exclude wiki pages (GitHub only)'
     )
     
     parser.add_argument(
