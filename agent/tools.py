@@ -329,7 +329,7 @@ def go_to_link(link_string: str) -> str:
     except Exception as e:
         return f"Error: {e}"
 
-def check_if_file_exists(file_path: str) -> str:
+def check_if_file_exists(file_path: str) -> bool:
     """
     Check if a file exists in the given filepath.
     
@@ -340,12 +340,11 @@ def check_if_file_exists(file_path: str) -> str:
         True if the file exists and is a file, False otherwise.
     """
     try:
-        exists = os.path.exists(file_path) and os.path.isfile(file_path)
-        return "True" if exists else "False"
+        return os.path.exists(file_path) and os.path.isfile(file_path)
     except (OSError, TypeError, ValueError):
-        return "False"
+        return False
 
-def check_if_dir_exists(dir_path: str) -> str:
+def check_if_dir_exists(dir_path: str) -> bool:
     """
     Check if a directory exists in the given filepath.
     
@@ -356,7 +355,6 @@ def check_if_dir_exists(dir_path: str) -> str:
         True if the directory exists and is a directory, False otherwise.
     """
     try:
-        exists = os.path.exists(dir_path) and os.path.isdir(dir_path)
-        return "True" if exists else "False"
+        return os.path.exists(dir_path) and os.path.isdir(dir_path)
     except (OSError, TypeError, ValueError):
-        return "False"
+        return False
