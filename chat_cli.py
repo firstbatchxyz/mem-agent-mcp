@@ -122,10 +122,42 @@ def main() -> None:
                     Panel(Text(content, style="cyan"), title="[cyan]you[/cyan]", border_style="cyan")
                 )
             elif role == Role.ASSISTANT:
-                reply = (extract_reply(content) or content).strip()
+                # Build a raw agent panel containing colorized think/python/reply blocks (with tags)
+                def _slice_with_tags(text: str, start_tag: str, end_tag: str):
+                    start = text.find(start_tag)
+                    if start == -1:
+                        return ""
+                    end = text.find(end_tag, start)
+                    if end == -1:
+                        return ""
+                    return text[start : end + len(end_tag)]
+
+                think_block = _slice_with_tags(content, "<think>", "</think>")
+                python_block = _slice_with_tags(content, "<python>", "</python>")
+                reply_block = _slice_with_tags(content, "<reply>", "</reply>")
+                reply_text = (extract_reply(content) or "").strip()
+
+                raw_sections = []
+                if think_block:
+                    raw_sections.append(Text(think_block.strip(), style="yellow"))
+                if python_block:
+                    raw_sections.append(Text(python_block.strip(), style="blue"))
+                if reply_block:
+                    raw_sections.append(Text(reply_block.strip(), style="green"))
+
+                if not raw_sections:
+                    raw_sections.append(Text((content or "").strip(), style="green"))
+
+                body = raw_sections[-1] if len(raw_sections) == 1 else Group(*raw_sections)
                 renderables.append(
-                    Panel(Text(reply, style="green"), title="[green]agent[/green]", border_style="green")
+                    Panel(body, title="[green]agent[/green]", border_style="green")
                 )
+
+                # If there is a reply, add a second panel with just the reply text
+                if reply_text:
+                    renderables.append(
+                        Panel(Text(reply_text, style="green"), title="[green]agent[/green]", border_style="green")
+                    )
             else:
                 renderables.append(Panel(Text(content), title=str(role)))
 
