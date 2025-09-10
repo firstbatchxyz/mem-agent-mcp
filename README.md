@@ -1,21 +1,89 @@
 # mem-agent-mcp
 
-Personal Memory Assistant for Claude Desktop using Dria's specialized memory agent.
+This is an MCP server for our model [driaforall/mem-agent](https://huggingface.co/driaforall/mem-agent), which can be connected to apps like Claude Desktop or Lm Studio to interact with an obisidian-like memory system.
 
-## Quick Start
+## Supported Platforms
 
-1. `make check-uv`
-2. `make install`
-3. `make setup`
-4. `make run-agent`
-5. `make generate-mcp-json`
+- macOS (Metal backend)
+- Linux (with GPU, vLLM backend)
+
+## Running Instructions
+
+1. `make check-uv` (if you have uv installed, skip this step).
+2. `make install`: Installs LmStudio on MacOS.
+3. `make setup`: This will open a file selector and ask you to select the directory where you want to store the memory. 
+4. `make run-agent`: If you're on macOS, this will prompt you to select the precision of the model you want to use. 4-bit is very usable as tested, and higher precision models are more reliable but slower.
+5. `make generate-mcp-json`: Generates the `mcp.json` file. That will be used in the next step.
 6. Instructions per app/provider:
     - Claude Desktop:
-        - Copy the generated `mcp.json` to the wherever your `claude_desktop.json` is located, then, quit and restart Claude Desktop.
+        - Copy the generated `mcp.json` to the where your `claude_desktop.json` is located, then, quit and restart Claude Desktop. Check [this guide](https://modelcontextprotocol.io/quickstart/user) for detailed instructions.
+    - Lm Studio:
+        - Copy the generated `mcp.json` to the `mcp.json` of Lm Studio. Check [this guide](https://lmstudio.ai/docs/app/plugins/mcp) for detailed instructions. If there are problems, change the name of the model in .mlx_model_name (found in the root of this repo) from `mem-agent-mlx-4bit` or `mem-agent-mlx-8bit` to `mem-agent-mlx@4bit` or `mem-agent-mlx@8bit` respectively.
+
+
+## Memory Instructions
+
+- Each memory directory should follow the structure below:
+```
+memory/
+    ├── user.md
+    └── entities/
+        └── [entity_name_1].md
+        └── [entity_name_2].md
+        └── ...
+```
+
+- `user.md` is the main file that contains information about the user and their relationships, accompanied by links to the enity file in the format of `[[entities/[entity_name].md]]` per relationship. The link format should be followed strictly.
+- `entities/` is the directory that contains the entity files.
+- Each entity file follows the same structure as `user.md`.
+- Modifying the memory manually does not require restarting the MCP server.
+
+### Example user.md
+
+```markdown
+# User Information
+- user_name: John Doe
+- birth_date: 1990-01-01
+- birth_location: New York, USA
+- living_location: Enschede, Netherlands
+- zodiac_sign: Aquarius
+
+## User Relationships
+- company: [[entities/acme_corp.md]]
+- mother: [[entities/jane_doe.md]]
+```
+
+### Example entity files (jane_doe.md and acme_corp.md)
+
+```markdown
+# Jane Doe
+- relationship: Mother
+- birth_date: 1965-01-01
+- birth_location: New York, USA
+```
+
+```markdown 
+# Acme Corporation
+- industry: Software Development
+- location: Enschede, Netherlands
+```
+
+## Filtering
+
+The model is trained to accepts filters on various domains in between <filter> tags after the user query. These filters are used to filter the retrieved information and/or obfuscate it completely. An example of a user query with filters is:
+
+```
+What's my mother's age? <filter> 1. Do not reveal explicit age information, 2. Do not reveal any email addresses </filter>
+```
+
+To use this, functionality with the MCP, you have two make targets:
+- `make add-filters`: Opens an input loop and adds the filters given by the user to the .filters file.
+- `make reset-filters`: Resets the .filters file (clears it).
+
+Adding or removing filters does not require restarting the MCP server.
+
 
 ## Memory Connectors
-
-Transform your conversation history from various sources into an intelligent, searchable memory system that Claude can access and reason about.
 
 ### Available Connectors
 
@@ -35,32 +103,18 @@ The easiest way to connect your memory sources:
 ```bash
 make memory-wizard
 # or
-python memory_connectors/memory_wizard.py
+python memory_wizard.py
 ```
 
-The wizard provides a comprehensive workflow that transforms your raw conversation data into an intelligent, searchable memory system:
-
-**1. Source Selection & Authentication**
-- Choose from available connectors (ChatGPT exports, Notion workspaces, GitHub repositories, etc.)
-- Set up required authentication tokens and API keys with guided instructions
-- Configure source paths, URLs, or workspace identifiers
-
-**2. Memory Organization Strategy**
-- For ChatGPT: Select between keyword-based categorization (fast, customizable) or AI-powered clustering (discovers natural conversation patterns using TF-IDF or semantic embeddings)
-- Configure output directory structure and processing limits
-
-**3. Automated Memory Creation**
-The connector intelligently processes your data to create a structured knowledge base:
-- Parses conversations and extracts meaningful topics, participants, and context
-- Groups related discussions into coherent categories (e.g., "AI Research", "Product Planning", "Technical Issues")
-- Generates cross-referenced entities with wikilink navigation between related topics
-- Creates user.md profile summarizing your interests and activity patterns
-- Structures everything as Markdown files optimized for mem-agent discovery
-
-**4. Verification & Integration**
-- Confirms successful memory creation with file counts and organization summary
-- Provides the memory directory path for MCP server integration
-- Shows example queries to test your new memory system
+The wizard will guide you through:
+- ✅ Connector selection with descriptions
+- ✅ Authentication setup (tokens, scopes)  
+- ✅ Source configuration (files, URLs, IDs)
+- ✅ Output directory setup
+- ✅ Connector-specific options
+- ✅ Configuration confirmation
+- ✅ Automatic execution
+- ✅ Success confirmation with next steps
 
 #### Manual CLI Usage
 
@@ -73,7 +127,7 @@ python memory_connectors/memory_connect.py --list
 
 #### ChatGPT History Import
 ```bash
-# Basic usage (keyword-based categorization)
+# Basic usage
 make connect-memory CONNECTOR=chatgpt SOURCE=/path/to/chatgpt-export.zip
 
 # AI-powered categorization with TF-IDF (fast)
@@ -238,7 +292,6 @@ memory/mcp-server/
             ├── conv_0-project-discussion.md
             └── conv_1-technical-planning.md
 ```
-
 ### Testing Your Memory
 
 After importing, test the memory system:
