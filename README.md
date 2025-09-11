@@ -350,6 +350,38 @@ Now Claude Code can access your memory system for contextual assistance during d
 - **Tool Execution**: Sandboxed code execution for memory operations
 - **Debug Logging**: Comprehensive logging for troubleshooting
 
+#### ChatGPT Integration
+
+**Prerequisites**: Complete memory setup and start your local agent:
+```bash
+make setup      # Configure memory directory
+make run-agent  # Start local vLLM/MLX model server
+```
+
+**Start MCP-Compliant HTTP Server:**
+```bash
+make serve-mcp-http  # Starts server on localhost:8081/mcp
+```
+
+**Expose with ngrok (separate terminal):**
+```bash
+ngrok http 8081  # Copy the forwarding URL
+```
+
+**Configure ChatGPT:**
+1. Go to [ChatGPT Settings → Connectors](https://chatgpt.com/#settings/Connectors)
+2. Enable **Developer mode** in Advanced settings
+3. Add new MCP server:
+   - **Name**: `mem-agent`
+   - **URL**: `https://your-ngrok-url.ngrok.io/mcp`
+   - **Protocol**: HTTP
+   - **Authentication**: None
+
+**Usage in ChatGPT:**
+Select **Developer mode** → Choose `mem-agent` connector → Ask questions like:
+- "Use mem-agent to search my memory for discussions about AI research"
+- "Query my memory for information about recent project work"
+
 ## Troubleshooting
 
 ### Common Issues

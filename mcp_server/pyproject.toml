@@ -8,6 +8,9 @@ dependencies = [
     "vllm; sys_platform != 'darwin'",
     "agent",
     "pygments>=2.19.2",
+    "fastapi",
+    "uvicorn",
+    "sse-starlette",
 ]
 
 [build-system]

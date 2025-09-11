@@ -5,8 +5,8 @@
 REPO_ROOT := $(shell git rev-parse --show-toplevel 2>/dev/null || pwd)
 
 # MLX Agent Names
-MLX_4BIT_MEMORY_AGENT_NAME := mem-agent-mlx-4bit
-MLX_8BIT_MEMORY_AGENT_NAME := mem-agent-mlx-8bit
+MLX_4BIT_MEMORY_AGENT_NAME := mem-agent-mlx
+MLX_8BIT_MEMORY_AGENT_NAME := mem-agent-mlx
 MLX_MEMORY_AGENT_NAME := driaforall/mem-agent-mlx-bf16 
 BF16_MEMORY_AGENT_SEARCH_NAME := mem-agent-mlx-bf16
 
@@ -26,7 +26,9 @@ help:
 	@echo "  10. chat-cli - Run interactive CLI to chat with the agent"
 	@echo "  11. memory-wizard - Interactive wizard for connecting memory sources"  
 	@echo "  12. connect-memory - Connect memory sources using new connector system"
-	@echo "  13. convert-chatgpt - Convert ChatGPT export (legacy, use connect-memory instead)"
+	@echo "  13. convert-chatgpt - Convert ChatGPT export (legacy, use convert-memory instead)"
+	@echo "  14. serve-http - Start HTTP server for ChatGPT integration (use with ngrok)"
+	@echo "  15. serve-mcp-http - Start MCP-compliant HTTP server for ChatGPT (recommended)"
 
 # Check if uv is installed and install if needed
 check-uv:
@@ -150,3 +152,30 @@ convert-chatgpt:
 	echo "🔄 Redirecting to new connector system..."; \
 	echo "Running: $$cmd"; \
 	$$cmd
+
+# HTTP Server for ChatGPT Integration
+serve-http:
+	@echo "🌐 Starting HTTP server for ChatGPT integration..."
+	@echo "💡 This creates an HTTP wrapper around the existing stdio MCP server"
+	@echo "🔗 Server will be available at: http://localhost:8080"
+	@echo ""
+	@echo "📋 Next steps:"
+	@echo "   1. Make sure your memory server is properly configured (make setup)"
+	@echo "   2. In another terminal, run: ngrok http 8080"
+	@echo "   3. Use the ngrok URL in ChatGPT Developer Mode"
+	@echo ""
+	uv run python mcp_server/http_server.py
+
+# MCP-Compliant HTTP Server for ChatGPT
+serve-mcp-http:
+	@echo "🌐 Starting MCP-compliant HTTP server for ChatGPT..."
+	@echo "📋 This implements proper Model Context Protocol over HTTP"
+	@echo "🔗 Server will be available at: http://localhost:8081"
+	@echo "🔗 MCP endpoint: http://localhost:8081/mcp"
+	@echo ""
+	@echo "📋 Next steps:"
+	@echo "   1. In another terminal, run: ngrok http 8081"
+	@echo "   2. In ChatGPT, use: https://your-ngrok-url.ngrok.io/mcp"
+	@echo "   3. Set protocol to 'HTTP' (not SSE)"
+	@echo ""
+	uv run python mcp_server/mcp_http_server.py
