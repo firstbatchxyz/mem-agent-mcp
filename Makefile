@@ -5,8 +5,8 @@
 REPO_ROOT := $(shell git rev-parse --show-toplevel 2>/dev/null || pwd)
 
 # MLX Agent Names
-MLX_4BIT_MEMORY_AGENT_NAME := mem-agent-mlx
-MLX_8BIT_MEMORY_AGENT_NAME := mem-agent-mlx
+MLX_4BIT_MEMORY_AGENT_NAME := mem-agent-mlx-4bit
+MLX_8BIT_MEMORY_AGENT_NAME := mem-agent-mlx-8bit
 MLX_MEMORY_AGENT_NAME := driaforall/mem-agent-mlx-bf16 
 BF16_MEMORY_AGENT_SEARCH_NAME := mem-agent-mlx-bf16
 
