@@ -1,0 +1,18 @@
+# Client: Northwind Retail Group
+- arr: $420,000
+- renewal_date: 2025-11-30
+- sponsor: Elaine Becker (COO)
+- advocate_score: 9/10
+- health_summary:
+  - usage: 78% active seats
+  - sentiment: Strong (quarterly testimonials)
+  - recent_escalations: None
+- strategic_initiatives:
+  - Launch AI-assisted fulfillment pilot in Q3
+  - Expand to EMEA subsidiaries (phase 2)
+- open_actions:
+  - Schedule roadmap session with Product (due 2025-05-10)
+  - Deliver benchmarking report vs retail peers (Mode dashboard)
+- notes:
+  - Prefers in-person executive briefings; coordinate via [[entities/team_lead.md]]
+  - Procurement cycle requires 45-day notice for multi-year terms

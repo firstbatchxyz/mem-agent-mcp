@@ -1,6 +1,6 @@
 # mem-agent-mcp
 
-This is an MCP server for our model [driaforall/mem-agent](https://huggingface.co/driaforall/mem-agent), which can be connected to apps like Claude Desktop or Lm Studio to interact with an obisidian-like memory system.
+This is an MCP server for our model [driaforall/mem-agent](https://huggingface.co/driaforall/mem-agent), which can be connected to apps like Claude Desktop or Lm Studio to interact with an obsidian-like memory system.
 
 ## Supported Platforms
 
@@ -117,6 +117,15 @@ The wizard will guide you through:
 - ✅ Success confirmation with next steps
 
 #### Manual CLI Usage
+
+**Quick Demo with Sample Memories:**
+```bash
+make run-agent
+make serve-mcp-http
+python examples/mem_agent_cli.py
+```
+
+Sample memory packs (`healthcare` and `client_success`) are included to demonstrate mem-agent functionality with different data types. Use the interactive CLI to explore these memories and test prompts.
 
 List Available Connectors:
 ```bash

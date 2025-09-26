@@ -1,0 +1,15 @@
+{
+  "generated_at": "2025-09-21T15:15:02.354109+00:00",
+  "patient_count": 5,
+  "memory_root": "memories/healthcare",
+  "source_csv": "examples/healthcare-local/sample_patients.csv",
+  "seed": 42,
+  "patients": [
+    "HR00487",
+    "HR00121",
+    "HR02350",
+    "HR04142",
+    "HR03110"
+  ],
+  "mode": "openai"
+}

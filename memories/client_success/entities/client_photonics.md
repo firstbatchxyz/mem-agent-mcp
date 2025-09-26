@@ -1,0 +1,18 @@
+# Client: Lumina Photonics
+- arr: $230,000
+- renewal_date: 2025-08-01
+- sponsor: Dr. Sara Weiss (VP Operations)
+- advocate_score: 8/10
+- health_summary:
+  - usage: 85% active seats across R&D teams
+  - sentiment: Positive; cited productivity gains in latest QBR
+  - recent_escalations: Feature request backlog for lab automation
+- expansion_opportunities:
+  - Add manufacturing analytics module (est. +$90k ARR)
+  - Upsell premium support for 24/7 lab coverage
+- action_items:
+  - Deliver ROI case study draft by 2025-05-25
+  - Coordinate onsite workshop during next lab shutdown window
+- notes:
+  - Prefers asynchronous updates; compile weekly highlights email
+  - Align roadmap visibility with Product to manage feature expectations

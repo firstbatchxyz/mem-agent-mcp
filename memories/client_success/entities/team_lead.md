@@ -1,0 +1,18 @@
+# Team Lead Profile
+- name: Maya Chen
+- title: Director of Client Success
+- tenure: 4.5 years
+- responsibilities:
+  - Own enterprise renewal forecast and board reporting
+  - Coach account owners on expansion and executive alignment
+  - Maintain escalation matrix and quarterly business review templates
+- key_metrics:
+  - q1_nrr: 118%
+  - q1_csat: 4.7
+  - open_escalations: 1 (OrbitBank data latency)
+- contact:
+  - email: maya.chen@example.com
+  - slack: @maya-chen
+  - calendar_link: https://cal.example.com/mchen
+- notes:
+  - Backup lead is [[entities/escalation_matrix.md]] (escalation matrix) for weekend coverage
