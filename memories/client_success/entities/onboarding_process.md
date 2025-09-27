@@ -1,0 +1,27 @@
+# Enterprise Onboarding Process
+- goal: Launch new enterprise clients in under 30 days with clear value realization
+- kickoff_call:
+  - attendees: Client sponsor, Technical lead, Implementation PM, CSM
+  - agenda:
+    - Introductions and success metrics
+    - Technical architecture overview
+    - Timeline review and dependencies
+    - Assign action items
+- implementation_sprints:
+  - sprint_1: Environment provisioning & SSO
+  - sprint_2: Data integration and pilot workflow
+  - sprint_3: Training & launch communications
+- documentation:
+  - runbook: Notion → Onboarding/Enterprise Runbook v3.2
+  - checklist: Asana → Template/Enterprise Onboarding Checklist
+  - faq: Confluence → Customer Success FAQ
+- exit_criteria:
+  - Success plan signed by sponsor
+  - First workflow live with >25 active users
+  - Support handoff completed
+- risks:
+  - Missing data feed approvals → escalate to [[entities/client_northwind.md]] sponsor for precedent
+  - Security review delays → involve Security SME within 48 hours
+- post_launch:
+  - Schedule QBR within 45 days
+  - Transition to adoption stage owner [[entities/account_playbook.md]]

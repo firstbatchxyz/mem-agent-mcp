@@ -1,0 +1,23 @@
+# Renewal Strategy Matrix
+- target: Secure 2-year terms with 6% uplift across enterprise portfolio
+- timeline:
+  - t_minus_120: Renewal trigger in HubSpot, assign owner
+  - t_minus_90: Conduct value recap call, present ROI dashboard
+  - t_minus_60: Finalize pricing package with Finance
+  - t_minus_45: Submit order form draft to procurement
+  - t_minus_30: Executive sponsor sign-off, collect signature
+- play_types:
+  - standard: < $150k ARR, no expansion; rely on price uplift and ROI dashboard
+  - growth: $150k-$500k ARR with product add-ons; involve Product Marketing
+  - transformation: > $500k ARR; requires executive workshop, CFO approval
+- negotiation_guardrails:
+  - min_term: 24 months for strategic accounts
+  - discount_ceiling: 12% without CFO approval
+  - support_tier: Premium support required for all enterprise renewals
+- red_flags:
+  - csat_below_4: Activate recovery plan owner (see [[entities/escalation_matrix.md]])
+  - churn_risk: Launch save play within 24 hours and alert CEO sponsor
+- collateral:
+  - renewal_story: Slide deck highlighting outcomes + roadmap
+  - benchmarking_report: Mode → Renewal Radar / Peer Benchmarks
+  - case_studies: Notion → Assets/Customer Stories

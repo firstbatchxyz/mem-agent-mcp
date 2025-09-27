@@ -118,6 +118,15 @@ The wizard will guide you through:
 
 #### Manual CLI Usage
 
+**Quick Demo with Sample Memories:**
+```bash
+make run-agent
+make serve-mcp-http
+python examples/mem_agent_cli.py
+```
+
+Sample memory packs (`healthcare` and `client_success`) are included to demonstrate mem-agent functionality with different data types. Use the interactive CLI to explore these memories and test prompts.
+
 List Available Connectors:
 ```bash
 make connect-memory

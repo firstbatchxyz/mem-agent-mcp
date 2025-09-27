@@ -1,0 +1,19 @@
+# Client: OrbitBank Financial Services
+- arr: $610,000
+- renewal_date: 2026-02-15
+- sponsor: Malik Okafor (Chief Digital Officer)
+- advocate_score: 6/10
+- health_summary:
+  - usage: 62% active seats (target 75%)
+  - sentiment: Neutral due to data latency concerns
+  - recent_escalations: SEV-2 data sync delay (April 2025)
+- strategic_initiatives:
+  - Deploy compliance analytics add-on (pilot underway)
+  - Migrate legacy branches to new API suite
+- mitigation_plan:
+  - Daily latency report from Engineering until incident closed
+  - Executive touchpoint with Maya Chen bi-weekly
+  - Offer 3-month premium support credit if SLA breached again
+- notes:
+  - CFO requires NRR justification deck 60 days before renewal
+  - Legal requests updated DPA with every scope change; involve Security early
