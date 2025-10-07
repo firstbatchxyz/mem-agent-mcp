@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/firstbatchxyz-mem-agent-mcp-badge.png)](https://mseep.ai/app/firstbatchxyz-mem-agent-mcp)
+
 # mem-agent-mcp
 
 This is an MCP server for our model [driaforall/mem-agent](https://huggingface.co/driaforall/mem-agent), which can be connected to apps like Claude Desktop or Lm Studio to interact with an obsidian-like memory system.
