@@ -18,17 +18,18 @@ help:
 	@echo "  2. check-uv - Check if uv is installed and install if needed"
 	@echo "  3. install - Install dependencies using uv"
 	@echo "  4. setup - Choose memory directory via GUI and save to .memory_path"
-	@echo "  5. add-filters - Add filters to .filters"
-	@echo "  6. reset-filters - Reset filters in .filters"
-	@echo "  7. run-agent - Run the agent"
-	@echo "  8. generate-mcp-json - Generate the MCP.json file"
-	@echo "  9. serve-mcp - Serve the MCP server"
-	@echo "  10. chat-cli - Run interactive CLI to chat with the agent"
-	@echo "  11. memory-wizard - Interactive wizard for connecting memory sources"  
-	@echo "  12. connect-memory - Connect memory sources using new connector system"
-	@echo "  13. convert-chatgpt - Convert ChatGPT export (legacy, use convert-memory instead)"
-	@echo "  14. serve-http - Start HTTP server for ChatGPT integration (use with ngrok)"
-	@echo "  15. serve-mcp-http - Start MCP-compliant HTTP server for ChatGPT (recommended)"
+	@echo "  5. setup-cli - Choose memory directory via CLI and save to .memory_path"
+	@echo "  6. add-filters - Add filters to .filters"
+	@echo "  7. reset-filters - Reset filters in .filters"
+	@echo "  8. run-agent - Run the agent"
+	@echo "  9. generate-mcp-json - Generate the MCP.json file"
+	@echo "  10. serve-mcp - Serve the MCP server"
+	@echo "  11. chat-cli - Run interactive CLI to chat with the agent"
+	@echo "  12. memory-wizard - Interactive wizard for connecting memory sources"  
+	@echo "  13. connect-memory - Connect memory sources using new connector system"
+	@echo "  14. convert-chatgpt - Convert ChatGPT export (legacy, use convert-memory instead)"
+	@echo "  15. serve-http - Start HTTP server for ChatGPT integration (use with ngrok)"
+	@echo "  16. serve-mcp-http - Start MCP-compliant HTTP server for ChatGPT (recommended)"
 
 # Check if uv is installed and install if needed
 check-uv:
@@ -58,6 +59,9 @@ install: check-uv
 
 setup:
 	uv run python mcp_server/scripts/memory_setup.py && uv run python mcp_server/scripts/setup_scripts_and_json.py && chmod +x mcp_server/scripts/start_server.sh
+
+setup-cli:
+	uv run python mcp_server/scripts/memory_setup_cli.py && uv run python mcp_server/scripts/setup_scripts_and_json.py && chmod +x mcp_server/scripts/start_server.sh
 
 add-filters:
 	uv run python mcp_server/scripts/filters.py --add
