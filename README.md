@@ -7,7 +7,30 @@ This is an MCP server for our model [driaforall/mem-agent](https://huggingface.c
 - macOS (Metal backend)
 - Linux (with GPU, vLLM backend)
 
+### Platform note: aarch64 (ARM64) Linux
+- On ARM64 Linux, vLLM is not installed by default to avoid build failures (no stable wheels and source builds can fail).
+- Installation will succeed without vLLM; you can:
+  - Use the default OpenRouter/OpenAI path (no local vLLM needed), or
+  - Run vLLM on a compatible x86_64 host and point the client at it (see agent/model.py create_vllm_client).
+
 ## Running Instructions
+
+### Using a LiteLLM proxy (OpenAI-compatible)
+- If you have a LiteLLM proxy running locally (e.g., on port 4000), configure the client via .env:
+```
+VLLM_HOST=localhost
+VLLM_PORT=4000
+```
+- Verify connectivity:
+```
+curl http://localhost:4000/v1/models
+```
+- Then use either of these:
+  - CLI: `make chat-cli`
+  - MCP over STDIO: `make serve-mcp`
+  - MCP over HTTP: `make serve-mcp-http`
+
+Note: On ARM64 Linux, this is the recommended setup instead of vLLM.
 
 1. `make check-uv` (if you have uv installed, skip this step).
 2. `make install`: Installs LmStudio on MacOS.
