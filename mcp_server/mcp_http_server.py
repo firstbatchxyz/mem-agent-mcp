@@ -286,12 +286,13 @@ def create_app() -> FastAPI:
 app = create_app()
 
 if __name__ == "__main__":
+    port = int(os.getenv("HTTP_PORT", "8081"))
     print("🌐 Starting MCP-Compliant HTTP Server for ChatGPT...")
     print("📋 This implements the Model Context Protocol over HTTP")
-    print("🔗 Main endpoint: POST /mcp")
+    print(f"🔗 Main endpoint: POST http://0.0.0.0:{port}/mcp")
     print()
     print("🌍 Use with ngrok for ChatGPT:")
-    print("  1. ngrok http 8081")
+    print(f"  1. ngrok http {port}")
     print("  2. Add ngrok URL + '/mcp' to ChatGPT")
     print("  3. Protocol: HTTP (not SSE)")
     print()
@@ -299,6 +300,6 @@ if __name__ == "__main__":
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=8081,  # Different port to avoid conflicts
+        port=port,
         log_level="info"
     )
