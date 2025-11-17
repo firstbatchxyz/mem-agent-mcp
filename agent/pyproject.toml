@@ -12,7 +12,7 @@ dependencies = [
     "black",
     "huggingface-hub>=0.34.3",
     "transformers>4.51.0,<4.54.0",
-    "vllm>=0.5.5; sys_platform != 'darwin'",
+    "vllm>=0.5.5; platform_system == 'Linux' and platform_machine == 'x86_64'",
     "setuptools"
 ]
 

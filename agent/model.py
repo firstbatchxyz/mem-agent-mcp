@@ -2,6 +2,7 @@ from openai import OpenAI
 from pydantic import BaseModel
 
 from typing import Optional, Union
+import os
 
 from agent.settings import OPENROUTER_API_KEY, OPENROUTER_BASE_URL, OPENROUTER_STRONG_MODEL
 from agent.schemas import ChatMessage, Role
@@ -15,9 +16,10 @@ def create_openai_client() -> OpenAI:
 
 def create_vllm_client(host: str = "0.0.0.0", port: int = 8000) -> OpenAI:
     """Create a new vLLM client instance (OpenAI-compatible)."""
+    api_key = os.getenv("VLLM_API_KEY", os.getenv("LITELLM_API_KEY", "EMPTY"))
     return OpenAI(
         base_url=f"http://{host}:{port}/v1",
-        api_key="EMPTY",
+        api_key=api_key,
     )
 
 

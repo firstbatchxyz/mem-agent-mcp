@@ -68,7 +68,7 @@ add-filters:
 
 reset-filters:
 	uv run python mcp_server/scripts/filters.py --reset
-
+	
 run-agent:
 	@if [ "$$(uname -s)" = "Darwin" ]; then \
 		echo "Detected macOS (Darwin). Starting MLX server via lms..."; \
@@ -89,8 +89,18 @@ run-agent:
 		lms load $$model; \
 		lms server start --port 8000; \
 	else \
-		echo "Non-macOS detected. Starting vLLM server..."; \
-		uv run vllm serve driaforall/mem-agent; \
+		ARCH="$$(uname -m)"; \
+		if [ "$$ARCH" != "x86_64" ]; then \
+			echo "Detected $${ARCH}. vLLM is not installed on this platform."; \
+			echo "Options:"; \
+			echo "  - Use OpenRouter/OpenAI backend (no local vLLM needed)."; \
+			echo "  - Run vLLM on a compatible x86_64 host and point the client at it."; \
+			echo "    Update your client host/port in agent/model.py if needed."; \
+			exit 0; \
+		else \
+			echo "Non-macOS detected. Starting vLLM server..."; \
+			uv run vllm serve driaforall/mem-agent; \
+		fi; \
 	fi
 
 generate-mcp-json:

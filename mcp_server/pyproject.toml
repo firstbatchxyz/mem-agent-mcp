@@ -5,7 +5,7 @@ description = "Mock FastMCP server exposing minimal tools that leverage the agen
 requires-python = ">=3.11,<3.12"
 dependencies = [
     "fastmcp",
-    "vllm; sys_platform != 'darwin'",
+    "vllm; platform_system == 'Linux' and platform_machine == 'x86_64'",
     "agent",
     "pygments>=2.19.2",
     "fastapi",
